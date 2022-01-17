@@ -5,17 +5,25 @@ import { Button, Container, Stack } from 'react-bootstrap'
 import BudgetCard from './components/BudgetCard'
 import AddbudgetModal from './components/AddbudgetModal'
 import { useBudgets } from './context/BudgetContext'
+import AddexpenseModal from './components/AddexpenxeModal'
 function App() {
  const[showaddbudgetmodal,setshowaddbudgetmodal]=useState(false)
+ const[showaddexpensemodal,setshowaddexpensemodal]=useState(false)
+ const[addexpensemodalbudgetid,setaddexpensemodalbudgetid]=useState()
 
 const {budgets,getBudgetExpenses}=useBudgets()
+
+function openaddexpensemodal(budgetId){
+  setshowaddexpensemodal(true)
+  setaddexpensemodalbudgetid(budgetId)
+}
   return (
     <>
   <Container>
 <Stack className="mb-4" gap="2" direction='horizontal'>
   <h1 className='me-auto'>Budgets</h1>
   <Button variant="primary" onClick={()=>setshowaddbudgetmodal(true)}>Add Budget</Button>
-  <Button variant="primary-outline">Add Expense</Button>
+  <Button variant="primary-outline" onClick={()=>openaddexpensemodal(true)}>Add Expense</Button>
 
 </Stack>
 <div style={{
@@ -26,9 +34,14 @@ const {budgets,getBudgetExpenses}=useBudgets()
 
 }}>
   {budgets.map((budget)=>{
-    const amount=getBudgetExpenses(budget.id)
+   const amount = getBudgetExpenses(budget.id).reduce(
+    (total, expense) => total + expense.amount,
+    0
+  )
     return (
-<BudgetCard key={budget.id} name={budget.name} amount={0} max={budget.max} />
+<BudgetCard key={budget.id} name={budget.name} amount={amount} max={budget.max} 
+onAddExpenseClick={()=>openaddexpensemodal(budget.id)}
+/>
 
   )
   })}
@@ -36,6 +49,10 @@ const {budgets,getBudgetExpenses}=useBudgets()
 </div>
   </Container>
   <AddbudgetModal show={showaddbudgetmodal}  handleClose={()=>setshowaddbudgetmodal(false)}/>
+  <AddexpenseModal show={showaddexpensemodal}  
+  defaultBudgetId={addexpensemodalbudgetid}
+  handleClose={()=>setshowaddexpensemodal(false)}
+  />
   </>
   )
 }

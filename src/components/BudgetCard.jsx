@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, Card, ProgressBar, Stack } from 'react-bootstrap'
 import {currencyFormatter} from "./Utils"
 
-export default function BudgetCard({name,amount,max,gray}) {
+export default function BudgetCard({name,amount,max,gray,onAddExpenseClick}) {
     const classNames=[]
     if(amount>max){
         classNames.push("bg-danger","bg-opacity-10")
@@ -25,7 +25,7 @@ export default function BudgetCard({name,amount,max,gray}) {
                 </Card.Title>
                 <ProgressBar classNAme="rounded pill" variant={getProgressBarvariant(amount,max)} gray min={0} max={max} now={amount} / >
                     <Stack className="mt-4" gap="2" direction="horizontal" >
-                    <Button className="ms-auto" variant="outline-primary">
+                    <Button className="ms-auto" variant="outline-primary" onClick={onAddExpenseClick}>
                     Add Expense
                     </Button>
                     <Button variant="outline-secondary">
