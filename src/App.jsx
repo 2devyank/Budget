@@ -6,10 +6,13 @@ import BudgetCard from './components/BudgetCard'
 import AddbudgetModal from './components/AddbudgetModal'
 import { useBudgets } from './context/BudgetContext'
 import AddexpenseModal from './components/AddexpenxeModal'
+import Total from './components/Total'
+import View from './components/View'
 function App() {
  const[showaddbudgetmodal,setshowaddbudgetmodal]=useState(false)
  const[showaddexpensemodal,setshowaddexpensemodal]=useState(false)
  const[addexpensemodalbudgetid,setaddexpensemodalbudgetid]=useState()
+ const[viewid,setviewid]=useState()
 
 const {budgets,getBudgetExpenses}=useBudgets()
 
@@ -41,17 +44,22 @@ function openaddexpensemodal(budgetId){
     return (
 <BudgetCard key={budget.id} name={budget.name} amount={amount} max={budget.max} 
 onAddExpenseClick={()=>openaddexpensemodal(budget.id)}
+onViewExpenseClick={()=>setviewid(budget.id)}
 />
 
   )
   })}
-
+<Total/>
 </div>
   </Container>
   <AddbudgetModal show={showaddbudgetmodal}  handleClose={()=>setshowaddbudgetmodal(false)}/>
   <AddexpenseModal show={showaddexpensemodal}  
   defaultBudgetId={addexpensemodalbudgetid}
   handleClose={()=>setshowaddexpensemodal(false)}
+  />
+  <View   
+  budgetId={viewid}
+  handleClose={()=>setviewid()}
   />
   </>
   )
